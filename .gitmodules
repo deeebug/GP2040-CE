@@ -1,0 +1,3 @@
+[submodule "MPG"]
+	path = MPG
+	url = https://github.com/Fortinbra/MPG.git
