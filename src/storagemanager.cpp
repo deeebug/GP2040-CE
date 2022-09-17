@@ -8,7 +8,7 @@
 #include "BoardConfig.h"
 #include <GamepadStorage.h>
 #include "AnimationStorage.hpp"
-#include "AnimationStation/src/Effects/StaticColor.hpp"
+#include "StaticColor.hpp"
 #include "FlashPROM.h"
 #include "hardware/watchdog.h"
 #include "Animation.hpp"

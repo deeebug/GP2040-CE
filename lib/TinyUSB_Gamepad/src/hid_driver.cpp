@@ -34,7 +34,7 @@ bool hid_device_control_request(uint8_t rhport, tusb_control_request_t const * r
 	}
 	else
 	{
-		return hidd_control_request(rhport, request);
+		return hidd_control_xfer_cb(rhport, 0, request);
 	}
 }
 
@@ -45,8 +45,7 @@ const usbd_class_driver_t hid_driver = {
 	.init = hidd_init,
 	.reset = hidd_reset,
 	.open = hidd_open,
-	.control_request = hid_device_control_request,
-	.control_complete = hidd_control_complete,
+	.control_xfer_cb   = hidd_control_xfer_cb,
 	.xfer_cb = hidd_xfer_cb,
 	.sof = NULL
 };
