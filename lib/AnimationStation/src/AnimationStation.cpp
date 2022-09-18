@@ -6,6 +6,7 @@
  */
 
 #include "AnimationStation.hpp"
+#include "hardware/timer.h"
 
 uint8_t AnimationStation::brightnessMax = 100;
 uint8_t AnimationStation::brightnessSteps = 5;

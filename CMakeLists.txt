@@ -21,6 +21,7 @@ src/storagemanager.cpp
 lib/FlashPROM/src/FlashPROM.cpp
 MPG/src/GamepadDebouncer.cpp
 MPG/src/MPG.cpp
+MPG/src/MPGS.cpp
 MPG/src/GamepadDescriptors.cpp
 lib/CRC32/src/CRC32.cpp
 ${PICO_SDK_PATH}/lib/tinyusb/src/class/net/ecm_rndis_device.c
@@ -34,6 +35,34 @@ lib/TinyUSB_Gamepad/src/usb_descriptors.cpp
 lib/TinyUSB_Gamepad/src/net_driver.cpp
 lib/TinyUSB_Gamepad/src/hid_driver.cpp
 lib/TinyUSB_Gamepad/src/xinput_driver.cpp
+# src/configs/webconfig.cpp
+src/inputs/analog.cpp
+src/inputs/turbo.cpp
+src/inputs/jslider.cpp
+src/addons/i2cdisplay.cpp
+src/addons/neopicoleds.cpp
+src/addons/playerleds.cpp
+lib/NeoPico/src/NeoPico.cpp
+lib/AnimationStation/src/AnimationStation.cpp
+lib/AnimationStation/src/Animation.cpp
+lib/AnimationStation/src/AnimationStation.hpp
+lib/AnimationStation/src/Animation.hpp
+lib/AnimationStation/src/Effects/Chase.cpp
+lib/AnimationStation/src/Effects/Rainbow.cpp
+lib/AnimationStation/src/Effects/StaticColor.cpp
+lib/AnimationStation/src/Effects/StaticTheme.cpp
+lib/OneBitDisplay/obd.inl
+lib/OneBitDisplay/OneBitDisplay.cpp
+lib/BitBang_I2C/BitBang_I2C.c
+${PICO_SDK_PATH}/lib/tinyusb/lib/networking/rndis_reports.c
+lib/rndis/rndis.c
+lib/lwip-port/server/dhserver.c
+lib/lwip-port/server/dnserver.c
+${PICO_SDK_PATH}/lib/lwip/src/core/pbuf.c
+${PICO_SDK_PATH}/lib/lwip/src/core/memp.c
+${PICO_SDK_PATH}/lib/lwip/src/core/mem.c
+${PICO_SDK_PATH}/lib/lwip/src/core/stats.c
+
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -59,18 +88,31 @@ ${PICO_SDK_PATH}/lib/tinyusb/lib/networking
 lib/CRC32/src
 ${PICO_SDK_PATH}/lib/tinyusb/src/device/
 ${PICO_SDK_PATH}/lib/tinyusb/src/class/hid/
+${PICO_SDK_PATH}/lib/tinyusb/src/
+${PICO_SDK_PATH}/lib/tinyusb/src/class/
 ${PICO_SDK_PATH}/lib/tinyusb/src/class/net/
+${PICO_SDK_PATH}/lib/tinyusb/lib/networking
+${PICO_SDK_PATH}/lib/lwip/src/include/
+${PICO_SDK_PATH}/lib/lwip/src/include/netif
+lib/lwip-port/
+lib/lwip-port/server
+lib/rndis
+lib/httpd
 )
 
 target_link_libraries(${PROJECT_NAME} 
     pico_stdlib
     pico_multicore
+    pico_time
     hardware_i2c
     hardware_spi
     hardware_pio
     tinyusb_device
     tinyusb_board
     hardware_flash
+    hardware_adc
+    hardware_pwm
+    hardware_clocks
     )
 
 pico_add_extra_outputs(${PROJECT_NAME})

@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <vector>
 #include "hardware/clocks.h"
+#include "hardware/timer.h"
+#include "pico/time.h"
 
 #include "NeoPico.hpp"
 #include "Animation.hpp"
