@@ -35,7 +35,7 @@ lib/TinyUSB_Gamepad/src/usb_descriptors.cpp
 lib/TinyUSB_Gamepad/src/net_driver.cpp
 lib/TinyUSB_Gamepad/src/hid_driver.cpp
 lib/TinyUSB_Gamepad/src/xinput_driver.cpp
-# src/configs/webconfig.cpp
+src/configs/webconfig.cpp
 src/inputs/analog.cpp
 src/inputs/turbo.cpp
 src/inputs/jslider.cpp
@@ -62,7 +62,24 @@ ${PICO_SDK_PATH}/lib/lwip/src/core/pbuf.c
 ${PICO_SDK_PATH}/lib/lwip/src/core/memp.c
 ${PICO_SDK_PATH}/lib/lwip/src/core/mem.c
 ${PICO_SDK_PATH}/lib/lwip/src/core/stats.c
-
+${PICO_SDK_PATH}/lib/lwip/src/core/ipv4/etharp.c
+${PICO_SDK_PATH}/lib/lwip/src/core/init.c
+${PICO_SDK_PATH}/lib/lwip/src/core/netif.c
+lib/httpd/httpd.c
+${PICO_SDK_PATH}/lib/lwip/src/core/ipv4/ip4.c
+${PICO_SDK_PATH}/lib/lwip/src/core/ip.c
+${PICO_SDK_PATH}/lib/lwip/src/core/tcp_in.c
+${PICO_SDK_PATH}/lib/lwip/src/core/tcp.c
+${PICO_SDK_PATH}/lib/lwip/src/core/tcp_out.c
+${PICO_SDK_PATH}/lib/lwip/src/core/def.c
+${PICO_SDK_PATH}/lib/lwip/src/core/inet_chksum.c
+${PICO_SDK_PATH}/lib/lwip/src/core/timeouts.c
+${PICO_SDK_PATH}/lib/lwip/src/core/ipv4/ip4_frag.c
+${PICO_SDK_PATH}/lib/lwip/src/core/ipv4/icmp.c
+${PICO_SDK_PATH}/lib/lwip/src/core/ipv4/ip4_addr.c
+${PICO_SDK_PATH}/lib/lwip/src/core/udp.c
+lib/httpd/fs.c
+${PICO_SDK_PATH}/lib/lwip/src/netif/ethernet.c
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -73,6 +90,7 @@ headers/addons
 configs/Pico
 MPG/src
 MPG/src/descriptors
+lib
 lib/OneBitDisplay
 lib/BitBang_I2C
 lib/AnimationStation/src

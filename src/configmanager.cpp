@@ -3,11 +3,11 @@
 #include "addons/neopicoleds.h"
 
 void ConfigManager::setup(ConfigType config) {
-	// switch(config) {
-	// 	case CONFIG_TYPE_WEB:
-	// 		setupConfig(new WebConfig());
-	// 		break;
-	// }
+	switch(config) {
+		case CONFIG_TYPE_WEB:
+			setupConfig(new WebConfig());
+			break;
+	}
     this->cType = config;
 }
 
