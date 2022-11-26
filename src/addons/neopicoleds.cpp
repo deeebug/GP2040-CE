@@ -122,6 +122,8 @@ void NeoPicoLEDAddon::process()
 		switch (gamepad->options.inputMode) {
 			case INPUT_MODE_XINPUT:
 				animationState = getXInputAnimationNEOPICO(featureData);
+				if (neoPLEDs != nullptr && animationState.animation != PLED_ANIM_NONE)
+					neoPLEDs->animate(animationState);
 				break;
 		}
 	}
@@ -341,6 +343,24 @@ std::vector<std::vector<Pixel>> NeoPicoLEDAddon::createLEDLayout(ButtonLayout la
 
 	switch (layout)
 	{
+		case BUTTON_LAYOUT_BLANKA:
+			return generatedLEDButtons(&positions);
+		
+		case BUTTON_LAYOUT_BUTTONS_BASIC:
+			return generatedLEDButtons(&positions);
+
+		case BUTTON_LAYOUT_KEYBOARD_ANGLED:
+			return generatedLEDButtons(&positions);
+
+		case BUTTON_LAYOUT_KEYBOARDA:
+			return generatedLEDButtons(&positions);
+
+		case BUTTON_LAYOUT_DANCEPADA:
+			return generatedLEDButtons(&positions);
+
+		case BUTTON_LAYOUT_TWINSTICKA:
+			return generatedLEDButtons(&positions);
+		
 		case BUTTON_LAYOUT_ARCADE:
 			return generatedLEDButtons(&positions);
 
@@ -349,6 +369,9 @@ std::vector<std::vector<Pixel>> NeoPicoLEDAddon::createLEDLayout(ButtonLayout la
 
 		case BUTTON_LAYOUT_BUTTONS_ANGLED:
 			return generatedLEDWasd(&positions);
+
+		case BUTTON_LAYOUT_VLXA:
+			return generatedLEDButtons(&positions);
 	}
 }
 

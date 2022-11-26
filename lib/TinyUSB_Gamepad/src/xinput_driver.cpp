@@ -7,17 +7,17 @@
 
 uint8_t endpoint_in = 0;
 uint8_t endpoint_out = 0;
-uint8_t xinput_out_buffer[XINPUT_OUT_SIZE] = {};
+uint8_t xinput_out_buffer[XINPUT_OUT_SIZE] = { };
 
 void receive_xinput_report(void)
 {
 	if (
 		tud_ready() &&
-		(endpoint_out != 0) && (!usbd_edpt_busy(0, endpoint_out)))
-	{
-		usbd_edpt_claim(0, endpoint_out);									 // Take control of OUT endpoint
+		(endpoint_out != 0) && (!usbd_edpt_busy(0, endpoint_out))
+	) {
+		usbd_edpt_claim(0, endpoint_out);                                    // Take control of OUT endpoint
 		usbd_edpt_xfer(0, endpoint_out, xinput_out_buffer, XINPUT_OUT_SIZE); // Retrieve report buffer
-		usbd_edpt_release(0, endpoint_out);									 // Release control of OUT endpoint
+		usbd_edpt_release(0, endpoint_out);                                  // Release control of OUT endpoint
 	}
 }
 
@@ -26,13 +26,12 @@ bool send_xinput_report(void *report, uint8_t report_size)
 	bool sent = false;
 
 	if (
-		tud_ready() &&											// Is the device ready?
+		tud_ready() &&                                          // Is the device ready?
 		(endpoint_in != 0) && (!usbd_edpt_busy(0, endpoint_in)) // Is the IN endpoint available?
-	)
-	{
-		usbd_edpt_claim(0, endpoint_in);								// Take control of IN endpoint
-		usbd_edpt_xfer(0, endpoint_in, (uint8_t *)report, report_size); // Send report buffer
-		usbd_edpt_release(0, endpoint_in);								// Release control of IN endpoint
+	) {
+		usbd_edpt_claim(0, endpoint_in);                        // Take control of IN endpoint
+		usbd_edpt_xfer(0, endpoint_in, (uint8_t *)report, report_size);    // Send report buffer
+		usbd_edpt_release(0, endpoint_in);                      // Release control of IN endpoint
 		sent = true;
 	}
 
@@ -41,6 +40,7 @@ bool send_xinput_report(void *report, uint8_t report_size)
 
 static void xinput_init(void)
 {
+
 }
 
 static void xinput_reset(uint8_t rhport)
@@ -98,9 +98,9 @@ static bool xinput_xfer_callback(uint8_t rhport, uint8_t ep_addr, xfer_result_t 
 }
 
 const usbd_class_driver_t xinput_driver =
-	{
+{
 #if CFG_TUSB_DEBUG >= 2
-		.name = "XINPUT",
+	.name = "XINPUT",
 #endif
 		.init = xinput_init,
 		.reset = xinput_reset,

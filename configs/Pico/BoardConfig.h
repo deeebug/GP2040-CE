@@ -36,6 +36,7 @@
 #define PIN_BUTTON_A1   20          // A1 / Guide / Home / ~ / 13 / ~
 #define PIN_BUTTON_A2   21          // A2 / ~ / Capture / ~ / 14 / ~
 #define PIN_BUTTON_TURBO 14         // Turbo
+#define PIN_BUTTON_REVERSE -1       // UDLR Reverse
 #define PIN_SLIDER_LS    -1         // Left Stick Slider
 #define PIN_SLIDER_RS    -1         // Right Stick Slider
 
@@ -174,8 +175,23 @@
 #define DISPLAY_FLIP 0
 #define DISPLAY_INVERT 0
 
+// I2C Analog ADS1219 Add-on Options
+#define I2C_ANALOG1219_SDA_PIN -1
+#define I2C_ANALOG1219_SCL_PIN -1
+#define I2C_ANALOG1219_BLOCK i2c0
+#define I2C_ANALOG1219_SPEED 400000
+#define I2C_ANALOG1219_ADDRESS 0x40
+
+// Reverse Button section
+#define REVERSE_LED_PIN -1
+#define REVERSE_UP_DEFAULT 1
+#define REVERSE_DOWN_DEFAULT 1
+#define REVERSE_LEFT_DEFAULT 1
+#define REVERSE_RIGHT_DEFAULT 1
+
 #define BUTTON_LAYOUT BUTTON_LAYOUT_STICK
 #define BUTTON_LAYOUT_RIGHT BUTTON_LAYOUT_VEWLIX
 #define SPLASH_MODE NOSPLASH
+#define SPLASH_CHOICE MAIN
 
 #endif

@@ -8,7 +8,7 @@
 #include <vector>
 
 // HTTPD Includes
-#include "ArduinoJson.h"
+#include <ArduinoJson.h>
 #include "rndis/rndis.h"
 #include "httpd/fs.h"
 #include "httpd/fscustom.h"
@@ -159,14 +159,18 @@ std::string setDisplayOptions()
 {
 	DynamicJsonDocument doc = get_post_data();
 	BoardOptions boardOptions = Storage::getInstance().getBoardOptions();
-	boardOptions.hasI2CDisplay     = doc["enabled"];
-	boardOptions.i2cSDAPin         = doc["sdaPin"] == -1 ? 0xFF : doc["sdaPin"];
-	boardOptions.i2cSCLPin         = doc["sclPin"] == -1 ? 0xFF : doc["sclPin"];
-	boardOptions.displayI2CAddress = doc["i2cAddress"];
-	boardOptions.i2cBlock          = doc["i2cBlock"];
-	boardOptions.i2cSpeed          = doc["i2cSpeed"];
-	boardOptions.displayFlip       = doc["flipDisplay"];
-	boardOptions.displayInvert     = doc["invertDisplay"];
+	boardOptions.hasI2CDisplay         = doc["enabled"];
+	boardOptions.i2cSDAPin             = doc["sdaPin"] == -1 ? 0xFF : doc["sdaPin"];
+	boardOptions.i2cSCLPin             = doc["sclPin"] == -1 ? 0xFF : doc["sclPin"];
+	boardOptions.displayI2CAddress     = doc["i2cAddress"];
+	boardOptions.i2cBlock              = doc["i2cBlock"];
+	boardOptions.i2cSpeed              = doc["i2cSpeed"];
+	boardOptions.displayFlip           = doc["flipDisplay"];
+	boardOptions.displayInvert         = doc["invertDisplay"];
+	boardOptions.buttonLayout      	   = doc["buttonLayout"];
+	boardOptions.buttonLayoutRight     = doc["buttonLayoutRight"];
+	boardOptions.splashMode      	   = doc["splashMode"];
+	boardOptions.splashChoice          = doc["splashChoice"];
 	ConfigManager::getInstance().setBoardOptions(boardOptions);
 	return serialize_json(doc);
 }
@@ -175,14 +179,18 @@ std::string getDisplayOptions() // Manually set Document Attributes for the disp
 {
 	DynamicJsonDocument doc(LWIP_HTTPD_POST_MAX_PAYLOAD_LEN);
 	BoardOptions boardOptions = Storage::getInstance().getBoardOptions();
-	doc["enabled"]       = boardOptions.hasI2CDisplay ? 1 : 0;
-	doc["sdaPin"]        = boardOptions.i2cSDAPin == 0xFF ? -1 : boardOptions.i2cSDAPin;
-	doc["sclPin"]        = boardOptions.i2cSCLPin == 0xFF ? -1 : boardOptions.i2cSCLPin;
-	doc["i2cAddress"]    = boardOptions.displayI2CAddress;
-	doc["i2cBlock"]      = boardOptions.i2cBlock;
-	doc["i2cSpeed"]      = boardOptions.i2cSpeed;
-	doc["flipDisplay"]   = boardOptions.displayFlip ? 1 : 0;
-	doc["invertDisplay"] = boardOptions.displayInvert ? 1 : 0;
+	doc["enabled"]       	 = boardOptions.hasI2CDisplay ? 1 : 0;
+	doc["sdaPin"]        	 = boardOptions.i2cSDAPin == 0xFF ? -1 : boardOptions.i2cSDAPin;
+	doc["sclPin"]        	 = boardOptions.i2cSCLPin == 0xFF ? -1 : boardOptions.i2cSCLPin;
+	doc["i2cAddress"]    	 = boardOptions.displayI2CAddress;
+	doc["i2cBlock"]      	 = boardOptions.i2cBlock;
+	doc["i2cSpeed"]      	 = boardOptions.i2cSpeed;
+	doc["flipDisplay"]   	 = boardOptions.displayFlip ? 1 : 0;
+	doc["invertDisplay"] 	 = boardOptions.displayInvert ? 1 : 0;
+	doc["buttonLayout"]  	 = boardOptions.buttonLayout;
+	doc["buttonLayoutRight"] = boardOptions.buttonLayoutRight;
+	doc["splashMode"]  	     = boardOptions.splashMode;
+	doc["splashChoice"]      = boardOptions.splashChoice;
 
 	Gamepad * gamepad = Storage::getInstance().GetGamepad();
 	auto usedPins = doc.createNestedArray("usedPins");
@@ -391,6 +399,17 @@ std::string setAddonOptions()
 	boardOptions.pinSliderLS  		= doc["sliderLSPin"] == -1 ? 0xFF : doc["sliderLSPin"];
 	boardOptions.pinSliderRS  		= doc["sliderRSPin"] == -1 ? 0xFF : doc["sliderRSPin"];
 	boardOptions.turboShotCount 	= doc["turboShotCount"];
+	boardOptions.pinButtonReverse  	= doc["reversePin"] == -1 ? 0xFF : doc["reversePin"];
+	boardOptions.pinReverseLED  	= doc["reversePinLED"] == -1 ? 0xFF : doc["reversePinLED"];
+	boardOptions.reverseActionUp  	= doc["reverseActionUp"] == -1 ? 0xFF : doc["reverseActionUp"];
+	boardOptions.reverseActionDown  = doc["reverseActionDown"] == -1 ? 0xFF : doc["reverseActionDown"];
+	boardOptions.reverseActionLeft  = doc["reverseActionLeft"] == -1 ? 0xFF : doc["reverseActionLeft"];
+	boardOptions.reverseActionRight = doc["reverseActionRight"] == -1 ? 0xFF : doc["reverseActionRight"];
+	boardOptions.i2cAnalog1219SDAPin = doc["i2cAnalog1219SDAPin"] == -1 ? 0xFF : doc["i2cAnalog1219SDAPin"];
+	boardOptions.i2cAnalog1219SCLPin = doc["i2cAnalog1219SCLPin"] == -1 ? 0xFF : doc["i2cAnalog1219SCLPin"];
+	boardOptions.i2cAnalog1219Block = doc["i2cAnalog1219Block"];
+	boardOptions.i2cAnalog1219Speed = doc["i2cAnalog1219Speed"];
+	boardOptions.i2cAnalog1219Address = doc["i2cAnalog1219Address"];
 	Storage::getInstance().setBoardOptions(boardOptions);
 
 	return serialize_json(doc);
@@ -405,6 +424,17 @@ std::string getAddonOptions()
 	doc["sliderLSPin"] = boardOptions.pinSliderLS == 0xFF ? -1 : boardOptions.pinSliderLS;
 	doc["sliderRSPin"] = boardOptions.pinSliderRS == 0xFF ? -1 : boardOptions.pinSliderRS;
 	doc["turboShotCount"] = boardOptions.turboShotCount;
+	doc["reversePin"] = boardOptions.pinButtonReverse == 0xFF ? -1 : boardOptions.pinButtonReverse;
+	doc["reversePinLED"] = boardOptions.pinReverseLED == 0xFF ? -1 : boardOptions.pinReverseLED;
+	doc["reverseActionUp"] = boardOptions.reverseActionUp == 0xFF ? -1 : boardOptions.reverseActionUp;
+	doc["reverseActionDown"] = boardOptions.reverseActionDown == 0xFF ? -1 : boardOptions.reverseActionDown;
+	doc["reverseActionLeft"] = boardOptions.reverseActionLeft == 0xFF ? -1 : boardOptions.reverseActionLeft;
+	doc["reverseActionRight"] = boardOptions.reverseActionRight == 0xFF ? -1 : boardOptions.reverseActionRight;
+	doc["i2cAnalog1219SDAPin"] = boardOptions.i2cAnalog1219SDAPin == 0xFF ? -1 : boardOptions.i2cAnalog1219SDAPin;
+	doc["i2cAnalog1219SCLPin"] = boardOptions.i2cAnalog1219SCLPin == 0xFF ? -1 : boardOptions.i2cAnalog1219SCLPin;
+	doc["i2cAnalog1219Block"] = boardOptions.i2cAnalog1219Block;
+	doc["i2cAnalog1219Speed"] = boardOptions.i2cAnalog1219Speed;
+	doc["i2cAnalog1219Address"] = boardOptions.i2cAnalog1219Address;
 
 	Gamepad * gamepad = Storage::getInstance().GetGamepad();
 	auto usedPins = doc.createNestedArray("usedPins");

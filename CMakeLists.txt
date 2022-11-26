@@ -17,6 +17,7 @@ src/gp2040.cpp
 src/gp2040aux.cpp
 src/gamepad.cpp
 src/configmanager.cpp
+src/addonmanager.cpp
 src/storagemanager.cpp
 lib/FlashPROM/src/FlashPROM.cpp
 MPG/src/GamepadDebouncer.cpp
@@ -40,9 +41,12 @@ src/inputs/analog.cpp
 src/inputs/turbo.cpp
 src/inputs/jslider.cpp
 src/addons/i2cdisplay.cpp
+src/addons/i2canalog1219.cpp
 src/addons/neopicoleds.cpp
 src/addons/playerleds.cpp
+src/addons/reverse.cpp
 lib/NeoPico/src/NeoPico.cpp
+lib/ADS1219/ADS1219.cpp
 lib/AnimationStation/src/AnimationStation.cpp
 lib/AnimationStation/src/Animation.cpp
 lib/AnimationStation/src/AnimationStation.hpp
@@ -93,6 +97,7 @@ MPG/src/descriptors
 lib
 lib/OneBitDisplay
 lib/BitBang_I2C
+lib/ADS1219
 lib/AnimationStation/src
 lib/AnimationStation/src/Effects
 lib/NeoPico/src

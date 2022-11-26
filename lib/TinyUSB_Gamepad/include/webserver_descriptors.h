@@ -45,7 +45,7 @@ static const tusb_desc_device_t webserver_device_descriptor =
 	.bMaxPacketSize0    = CFG_TUD_ENDPOINT0_SIZE,
 
 	.idVendor           = 0xCAFE,
-	.idProduct          = 0x4001,
+	.idProduct          = 0x4021,
 	.bcdDevice          = 0x0101,
 
 	.iManufacturer      = 0x01,
@@ -89,6 +89,5 @@ static uint8_t const ecm_configuration[] =
 // Note index is Num-1x
 static uint8_t const * const net_configuration_arr[] =
 {
-	rndis_configuration,
-	ecm_configuration,
+	ecm_configuration
 };
