@@ -13,6 +13,13 @@
 // Magic byte sequence to enable PS button on PS3
 static const uint8_t magic_init_bytes[8] = { 0x21, 0x26, 0x01, 0x07, 0x00, 0x00, 0x00, 0x00 };
 
+static uint8_t gamepad_idle_config = 0;
+
+// protocol setting from the host.  We use exactly the same report
+// either way, so this variable only stores the setting since we
+// are required to be able to report which setting is in use.
+static uint8_t gamepad_protocol = 1;
+
 bool send_hid_report(uint8_t report_id, void *report, uint8_t report_size)
 {
 	if (tud_hid_ready())
@@ -25,17 +32,42 @@ bool hid_device_control_request(uint8_t rhport, tusb_control_request_t const * r
 {
 	if (
 		get_input_mode() == INPUT_MODE_HID &&
-		request->bmRequestType == 0xA1 &&
-		request->bRequest == HID_REQ_CONTROL_GET_REPORT &&
-		request->wValue == 0x0300
+		request->bmRequestType == 0xA1
 	)
 	{
-		return tud_control_xfer(rhport, request, (void *) magic_init_bytes, sizeof(magic_init_bytes));
+		if (request->bRequest == HID_REQ_CONTROL_GET_REPORT
+			// && request->wValue == 0x0300
+		   ) {
+			return tud_control_xfer(rhport, request, (void *) magic_init_bytes, sizeof(magic_init_bytes));
+		}
+		// if (request->bRequest == HID_REQ_CONTROL_GET_IDLE) {
+		// 	return tud_control_xfer(rhport, request, (void *) &gamepad_idle_config, sizeof(gamepad_idle_config));
+		// }
+		// if (request->bRequest == HID_REQ_CONTROL_GET_PROTOCOL) {
+		// 	return tud_control_xfer(rhport, request, (void *) &gamepad_protocol, sizeof(magic_init_bytes));
+		// }
 	}
-	else
-	{
-		return hidd_control_request(rhport, request);
-	}
+	// if (
+	// 	get_input_mode() == INPUT_MODE_HID &&
+	// 	request->bmRequestType == 0x21
+	// )
+	// {
+	// 	if (request->bRequest == HID_REQ_CONTROL_SET_REPORT &&
+	// 	request->wValue == 0x0300) {
+	// 		// NOOP
+	// 	}
+	// 	// if (request->bRequest == HID_REQ_CONTROL_SET_IDLE) {
+	// 	// 	gamepad_idle_config = (request->wValue >> 8);
+	// 	// }
+	// 	// if (request->bRequest == HID_REQ_CONTROL_SET_PROTOCOL) {
+	// 	// 	gamepad_protocol = request->wValue;
+	// 	// }		
+	// }
+	// else
+	// {
+	// 	return hidd_control_request(rhport, request);
+	// }
+	return hidd_control_request(rhport, request);
 }
 
 const usbd_class_driver_t hid_driver = {

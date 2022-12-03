@@ -46,7 +46,7 @@ void GP2040::setup() {
 		ConfigManager::getInstance().setup(CONFIG_TYPE_WEB);
 	} else { 											// Gamepad Mode
 		Storage::getInstance().SetConfigMode(false);
-		if (gamepad->pressedB3())                       // HOLD B3 - D-INPUT
+		if (1)                       // HOLD B3 - D-INPUT
 			inputMode = INPUT_MODE_HID;
 		else if (gamepad->pressedB1())                  // HOLD B1 - SWITCH
 			inputMode = INPUT_MODE_SWITCH;

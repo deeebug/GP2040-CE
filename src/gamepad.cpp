@@ -10,6 +10,47 @@
 #include "FlashPROM.h"
 #include "CRC32.h"
 
+#include <stdio.h>
+
+#include "picolight.h"
+
+#include "pico/stdlib.h"
+#include "hardware/gpio.h"
+#include "hardware/sync.h"
+#include "hardware/structs/ioqspi.h"
+#include "hardware/structs/sio.h"
+
+
+bool __no_inline_not_in_flash_func(get_bootsel_button)() {
+    const uint CS_PIN_INDEX = 1;
+
+    // Must disable interrupts, as interrupt handlers may be in flash, and we
+    // are about to temporarily disable flash access!
+    uint32_t flags = save_and_disable_interrupts();
+
+    // Set chip select to Hi-Z
+    hw_write_masked(&ioqspi_hw->io[CS_PIN_INDEX].ctrl,
+                    GPIO_OVERRIDE_LOW << IO_QSPI_GPIO_QSPI_SS_CTRL_OEOVER_LSB,
+                    IO_QSPI_GPIO_QSPI_SS_CTRL_OEOVER_BITS);
+
+    // Note we can't call into any sleep functions in flash right now
+    for (volatile int i = 0; i < 1000; ++i);
+
+    // The HI GPIO registers in SIO can observe and control the 6 QSPI pins.
+    // Note the button pulls the pin *low* when pressed.
+    bool button_state = !(sio_hw->gpio_hi_in & (1u << CS_PIN_INDEX));
+
+    // Need to restore the state of chip select, else we are going to have a
+    // bad time when we return to code in flash!
+    hw_write_masked(&ioqspi_hw->io[CS_PIN_INDEX].ctrl,
+                    GPIO_OVERRIDE_NORMAL << IO_QSPI_GPIO_QSPI_SS_CTRL_OEOVER_LSB,
+                    IO_QSPI_GPIO_QSPI_SS_CTRL_OEOVER_BITS);
+
+    restore_interrupts(flags);
+
+    return button_state;
+}
+
 // MUST BE DEFINED for mpgs
 uint32_t getMillis() {
 	return to_ms_since_boot(get_absolute_time());
@@ -75,10 +116,22 @@ void Gamepad::process()
 	MPGS::process();
 }
 
+int pushed = 0;
+int raised = 1;
+int yes = 0;
+
 void Gamepad::read()
 {
 	// Need to invert since we're using pullups
 	uint32_t values = ~gpio_get_all();
+
+	// if (!pushed & get_bootsel_button())
+	// 	pushed = 1;
+
+	// if (pushed & !get_bootsel_button()) {
+	// 	pushed = 0;
+	// 	yes = (yes + 1) % 13;
+	// }
 
 	#ifdef PIN_SETTINGS
 	state.aux = 0
@@ -93,8 +146,28 @@ void Gamepad::read()
 		| ((values & mapDpadRight->pinMask) ? mapDpadRight->buttonMask : 0)
 	;
 
+	// state.buttons = 0
+	// 	| ((yes == 0)  ? mapButtonB1->buttonMask  : 0)
+	// 	| ((yes == 1)  ? mapButtonB2->buttonMask  : 0)
+	// 	| ((yes == 2)  ? mapButtonB3->buttonMask  : 0)
+	// 	| ((yes == 3)  ? mapButtonB4->buttonMask  : 0)
+	// 	| ((yes == 4)  ? mapButtonL1->buttonMask  : 0)
+	// 	| ((yes == 5)  ? mapButtonR1->buttonMask  : 0)
+	// 	| ((yes == 6)  ? mapButtonL2->buttonMask  : 0)
+	// 	| ((yes == 7)  ? mapButtonR2->buttonMask  : 0)
+	// 	| ((yes == 8)  ? mapButtonS1->buttonMask  : 0)
+	// 	| ((yes == 9)  ? mapButtonS2->buttonMask  : 0)
+	// 	| ((yes == 10)  ? mapButtonL3->buttonMask  : 0)
+	// 	| ((yes == 11)  ? mapButtonR3->buttonMask  : 0)
+	// 	| ((yes == 12)  ? mapButtonA1->buttonMask  : 0)
+	// 	| ((yes == 13)  ? mapButtonA2->buttonMask  : 0)
+	// ;
+
+	bool bootsel = get_bootsel_button();
+	light_up(!bootsel);
+
 	state.buttons = 0
-		| ((values & mapButtonB1->pinMask)  ? mapButtonB1->buttonMask  : 0)
+		| ((bootsel)  ? mapButtonA1->buttonMask  : 0)
 		| ((values & mapButtonB2->pinMask)  ? mapButtonB2->buttonMask  : 0)
 		| ((values & mapButtonB3->pinMask)  ? mapButtonB3->buttonMask  : 0)
 		| ((values & mapButtonB4->pinMask)  ? mapButtonB4->buttonMask  : 0)
@@ -106,7 +179,7 @@ void Gamepad::read()
 		| ((values & mapButtonS2->pinMask)  ? mapButtonS2->buttonMask  : 0)
 		| ((values & mapButtonL3->pinMask)  ? mapButtonL3->buttonMask  : 0)
 		| ((values & mapButtonR3->pinMask)  ? mapButtonR3->buttonMask  : 0)
-		| ((values & mapButtonA1->pinMask)  ? mapButtonA1->buttonMask  : 0)
+		| ((values & mapButtonA1->pinMask)  ? mapButtonB1->buttonMask  : 0)
 		| ((values & mapButtonA2->pinMask)  ? mapButtonA2->buttonMask  : 0)
 	;
 
